@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./app/server.js",
     "dev": "nodemon ./app/server.js",
-    "init-db": "node database/init-db.js"
+    "init-db": "node ./database/init-db.js"
   },
   "keywords": [],
   "author": "",
