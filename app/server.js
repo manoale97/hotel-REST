@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import habitacionesRoutes from './routes/habitaciones.js';
 import reservasRoutes from './routes/reservas.js';
 import adminRoutes from './routes/admin.js';
+import apiRoutes from './routes/api.js';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use('/api', apiRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/habitaciones', habitacionesRoutes);
 app.use('/api/reservas', reservasRoutes);
@@ -24,5 +26,5 @@ app.get('/health', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🔐 REST API en http://localhost:${PORT}`);
+  console.log(`🔐 REST API en http://localhost:${PORT}/api`);
 });
