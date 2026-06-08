@@ -33,3 +33,11 @@ export function verificarAdmin(req, res, next) {
   }
   next();
 }
+
+// Middleware para admin o empleado
+export function verificarAdminEmpleado(req, res, next) {
+  if (req.usuario.rol !== 'admin' && req.usuario.rol !== 'empleado') {
+    return res.status(403).json({ error: 'Requiere admin o empleado' });
+  }
+  next();
+}
