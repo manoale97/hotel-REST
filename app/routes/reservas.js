@@ -1,13 +1,15 @@
 import express from 'express';
 import { Reserva } from '../../database/db.js';
 import { verificarToken } from '../auth/jwt.js';
-import { borrarReserva, crearReservas, obtenerReserva, obtenerReservas } from '../controllers/reservasController.js';
+import { borrarReserva, crearReservas, obtenerReserva, obtenerReservas, obtenerAllReservas } from '../controllers/reservasController.js';
 
 const router = express.Router();
 
 router.post('/', verificarToken, crearReservas);
 
 router.get('/', verificarToken, obtenerReservas);
+
+router.get('/all', verificarToken, obtenerAllReservas);
 
 // VULNERABLE A IDOR
 router.get('/:id', verificarToken, obtenerReserva);

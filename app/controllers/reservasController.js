@@ -1,3 +1,4 @@
+import { sequelize } from "../../database/db.js";
 import { Reserva } from "../../database/db.js";
 
 export const crearReservas = async (req, res) => {
@@ -18,10 +19,37 @@ export const crearReservas = async (req, res) => {
 
 export const obtenerReservas = async (req, res) => {
   try {
-    const reservas = await Reserva.findAll({
-      where: { usuario_id: req.usuario.id },
-      include: ['habitacion']
-    });
+    const reservas = await sequelize.query(
+      `SELECT r.*, h.* 
+       FROM reservas r
+       INNER JOIN habitaciones h ON r.habitacion_id = h.id
+       WHERE r.usuario_id = ?`,
+      {
+        replacements: [req.usuario.id],
+        type: sequelize.QueryTypes.SELECT,
+        nest: true
+      }
+    );
+    
+    res.json(reservas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export const obtenerAllReservas = async (req, res) => {
+  try {
+    const reservas = await sequelize.query(
+      `SELECT r.*, h.* 
+       FROM reservas r
+       INNER JOIN habitaciones h ON r.habitacion_id = h.id
+       ORDER BY r.fecha_inicio DESC`,
+      {
+        type: sequelize.QueryTypes.SELECT,
+        nest: true
+      }
+    );
+    
     res.json(reservas);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -30,10 +58,25 @@ export const obtenerReservas = async (req, res) => {
 
 export const obtenerReserva = async (req, res) => {
   try {
-    const reserva = await Reserva.findByPk(req.params.id, {
-      include: ['usuario', 'habitacion']
-    });
-    if (!reserva) return res.status(404).json({ error: 'No encontrada' });
+    const reservas = await sequelize.query(
+      `SELECT r.*, u.*, h.* 
+       FROM reservas r
+       LEFT JOIN usuarios u ON r.usuario_id = u.id
+       LEFT JOIN habitaciones h ON r.habitacion_id = h.id
+       WHERE r.id = ?`,
+      {
+        replacements: [req.params.id],
+        type: sequelize.QueryTypes.SELECT,
+        nest: true
+      }
+    );
+    
+    const reserva = reservas[0]; // La primera coincidencia
+    
+    if (!reserva) {
+      return res.status(404).json({ error: 'No encontrada' });
+    }
+    
     res.json(reserva);
   } catch (error) {
     res.status(500).json({ error: error.message });
