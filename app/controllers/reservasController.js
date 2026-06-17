@@ -40,7 +40,17 @@ export const obtenerReservas = async (req, res) => {
 export const obtenerAllReservas = async (req, res) => {
   try {
     const reservas = await sequelize.query(
-      `SELECT r.*, h.* 
+      `SELECT r.id AS reserva_id,
+        r.usuario_id,
+        r.habitacion_id,
+        r.fecha_inicio,
+        r.fecha_fin,
+        r.estado,
+        h.id AS habitacion_real_id,
+        h.numero,
+        h.tipo,
+        h.precio_noche,
+        h.disponible 
        FROM reservas r
        INNER JOIN habitaciones h ON r.habitacion_id = h.id
        ORDER BY r.fecha_inicio DESC`,
@@ -49,8 +59,25 @@ export const obtenerAllReservas = async (req, res) => {
         nest: true
       }
     );
+
+    const reservasFormat = reservas.map(row => ({
+      id: row.reserva_id,
+      usuario_id: row.usuario_id,
+      habitacion_id: row.habitacion_id,
+      fecha_inicio: row.fecha_inicio,
+      fecha_fin: row.fecha_fin,
+      estado: row.estado,
+
+      habitacion: {
+        id: row.habitacion_real_id,
+        numero: row.numero,
+        tipo: row.tipo,
+        precio_noche: row.precio_noche,
+        disponible: row.disponible
+      }
+    }));
     
-    res.json(reservas);
+    res.json(reservasFormat);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -14,7 +14,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
-    logging: false,
+    logging: console.log,
     pool: {
       max: 10,
       min: 0,
@@ -28,5 +28,24 @@ const Usuario = usuarioModel(sequelize, DataTypes);
 const Habitacion = habitacionModel(sequelize, DataTypes);
 const Reserva = reservaModel(sequelize, DataTypes);
 
+Usuario.hasMany(Reserva, {
+  foreignKey: 'usuario_id',
+  as: 'reservas'
+});
+
+Reserva.belongsTo(Usuario, {
+  foreignKey: 'usuario_id',
+  as: 'usuario'
+});
+
+Habitacion.hasMany(Reserva, {
+  foreignKey: 'habitacion_id',
+  as: 'reservas'
+});
+
+Reserva.belongsTo(Habitacion, {
+  foreignKey: 'habitacion_id',
+  as: 'habitacion'
+});
 
 export { sequelize, Usuario, Habitacion, Reserva };
