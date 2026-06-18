@@ -24,15 +24,15 @@
 <p>El sistema funcionará por defecto con el puerto 4000 a la API graphql, 3000 para REST y 3306 para MySQL</p>
 
 <h3>Estructura archivo .env</h3>
-******************************************
-PORT=4000
-JWT_SECRET=/*clave secreta que desee definir*/
-
-# Configuración MySQL (misma BD que GRAPHQL)
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=/*usuario mysql*/
-DB_PASSWORD=/*password mysql*/
-DB_NAME=/*nombre de la base de datos*/
-DB_DIALECT=mysql
-******************************************
+<br>******************************************
+<br>PORT=4000
+<br>JWT_SECRET=/*clave secreta que desee definir*/
+<br>
+<br>#Configuración MySQL (misma BD que REST)
+<br>DB_HOST=localhost
+<br>DB_PORT=3306
+<br>DB_USER=/*usuario mysql*/
+<br>DB_PASSWORD=/*password mysql*/
+<br>DB_NAME=/*nombre de la base de datos*/
+<br>DB_DIALECT=mysql
+<br>******************************************
